@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoSort | Smart Waste Analytics</title>
+
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="logo-container">
+            <img src="/static/school_branding.png" alt="Victoria Public School" class="full-branding-logo">
+        </div>
+
+        <nav>
+            <a href="#" class="active"><i class="ri-dashboard-line"></i> Dashboard</a>
+            <a href="/report" target="_blank"><i class="ri-file-chart-line"></i> Analytics Report</a>
+            <a href="#" id="reset-btn" class="danger-link"><i class="ri-refresh-line"></i> Reset Status</a>
+        </nav>
+
+        <div class="team-section">
+            <p class="label">Team Members</p>
+            <div class="team-member">George John Harry</div>
+            <div class="team-member">Josewin Samuel</div>
+        </div>
+
+        <div class="sidebar-footer">
+            <div class="status-dot tooltip" data-tooltip="System Online"></div>
+            <span>System Status</span>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <div class="project-banner">
+            <h1>AI-DRIVEN SMART WASTE SEGREGATION AND MONITORING SYSTEM</h1>
+            <div class="banner-footer">
+                <div class="proposed-by">
+                    <p>Proposed by: <strong>George John Harry</strong> & <strong>Josewin Samuel (Grade 11)</strong></p>
+                </div>
+                <div class="banner-school">
+                    <p>Victoria Public School,</p>
+                    <span>Thoothukudi.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- TOP SECTION: VIDEO & KPIS SIDE-BY-SIDE -->
+        <div class="video-kpi-container">
+            <!-- LIVE VIDEO FEED -->
+            <div class="card video-section">
+                <div class="card-header">
+                    <h3><i class="ri-video-camera-line"></i> Live Detection Feed</h3>
+                    <div class="stream-status">
+                        <span class="live-dot"></span> LIVE
+                    </div>
+                </div>
+                <div class="video-container">
+                    <img src="/video_feed" alt="Live Stream" id="stream-img">
+                    <div id="no-signal" class="no-signal-overlay">
+                        <i class="ri-signal-wifi-off-line"></i>
+                        <p>Camera Offline</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KPIS (Side Column) -->
+            <div class="kpi-side-column">
+                <!-- Total -->
+                <div class="card kpi-card">
+                    <div class="kpi-icon total"><i class="ri-delete-bin-line"></i></div>
+                    <div>
+                        <p class="label">Total Processed</p>
+                        <h2 id="total">0</h2>
+                    </div>
+                </div>
+
+                <!-- Last Detected -->
+                <div class="card kpi-card">
+                    <div class="kpi-icon last"><i class="ri-eye-line"></i></div>
+                    <div>
+                        <p class="label">Last Detected</p>
+                        <h2 id="last">---</h2>
+                    </div>
+                </div>
+
+                <!-- Dominant -->
+                <div class="card kpi-card">
+                    <div class="kpi-icon dom"><i class="ri-bar-chart-groupped-line"></i></div>
+                    <div>
+                        <p class="label">Dominant Type</p>
+                        <h2 id="dominant">---</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CHARTS & DETAILS GRID -->
+        <div class="dashboard-grid">
+
+            <!-- LEFT COLUMN: Charts & Bin Status -->
+            <div class="card chart-section">
+                <!-- Waste Category Distribution -->
+                <div class="card-header">
+                    <h3>Waste Distribution</h3>
+                    <button class="icon-btn"><i class="ri-more-fill"></i></button>
+                </div>
+                <div class="chart-container">
+                    <canvas id="wasteChart"></canvas>
+                </div>
+
+                <!-- SWAPPED: Live Bin Status placed here -->
+                <div class="card-header"
+                    style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border);">
+                    <h3>Live Bin Levels</h3>
+                </div>
+
+                <div style="margin-top: 15px;">
+                    <div class="bin-item">
+                        <div class="bin-info">
+                            <span class="bin-name"><i class="ri-cup-line" style="color:var(--warning)"></i>
+                                Plastic</span>
+                            <span class="bin-count" id="plastic">0</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="fill plastic-fill" id="p_fill" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div class="bin-item">
+                        <div class="bin-info">
+                            <span class="bin-name"><i class="ri-hospital-line" style="color:var(--danger)"></i>
+                                Medical</span>
+                            <span class="bin-count" id="medical">0</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="fill medical-fill" id="m_fill" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div class="bin-item">
+                        <div class="bin-info">
+                            <span class="bin-name"><i class="ri-leaf-line" style="color:var(--success)"></i>
+                                General</span>
+                            <span class="bin-count" id="general">0</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="fill general-fill" id="g_fill" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN: Trend & AI -->
+            <div class="card live-stats">
+                <!-- SWAPPED: Collection Trend placed here -->
+                <h3>Collection Trend</h3>
+                <div class="chart-container" style="min-height: 200px;">
+                    <canvas id="trendChart"></canvas>
+                </div>
+
+                <!-- RECOMMENDATION -->
+                <div class="ai-insight" style="margin-top: 20px;">
+                    <div class="insight-header">
+                        <i class="ri-lightbulb-flash-line"></i> AI Suggestion
+                    </div>
+                    <p id="recommendation">Initializing expert analysis...</p>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // --- DONUT CHART (Composition) ---
+        const ctx = document.getElementById('wasteChart').getContext('2d');
+        const wasteChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Plastic', 'Medical', 'General'],
+                datasets: [{
+                    label: '# of Items',
+                    data: [0, 0, 0],
+                    backgroundColor: [
+                        '#f59e0b', // Amber
+                        '#ef4444', // Red
+                        '#22c55e'  // Green
+                    ],
+                    borderWidth: 0,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '70%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { usePointStyle: true, padding: 20 }
+                    }
+                }
+            }
+        });
+
+        // --- TREND CHART (History) ---
+        const ctx2 = document.getElementById('trendChart').getContext('2d');
+        const trendChart = new Chart(ctx2, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [
+                    {
+                        label: 'Plastic',
+                        data: [],
+                        borderColor: '#f59e0b',
+                        backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    },
+                    {
+                        label: 'Medical',
+                        data: [],
+                        borderColor: '#ef4444',
+                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    },
+                    {
+                        label: 'General',
+                        data: [],
+                        borderColor: '#22c55e',
+                        backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true, grid: { color: '#f3f4f6' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        // --- DASHBOARD UPDATE LOGIC ---
+        function updateDashboard() {
+            fetch('/data')
+                .then(response => response.json())
+                .then(data => {
+                    // Update Text
+                    document.getElementById('total').innerText = data.total;
+                    document.getElementById('last').innerText = data.last_detected;
+                    document.getElementById('dominant').innerText = data.dominant;
+                    document.getElementById('plastic').innerText = data.plastic;
+                    document.getElementById('medical').innerText = data.medical;
+                    document.getElementById('general').innerText = data.general;
+                    document.getElementById('recommendation').innerText = data.recommendation;
+
+                    // Update Progress Bars (Assuming max 50 for demo)
+                    const max = 20;
+                    document.getElementById('p_fill').style.width = Math.min((data.plastic / max) * 100, 100) + "%";
+                    document.getElementById('m_fill').style.width = Math.min((data.medical / max) * 100, 100) + "%";
+                    document.getElementById('g_fill').style.width = Math.min((data.general / max) * 100, 100) + "%";
+
+                    // Update Donut Chart
+                    wasteChart.data.datasets[0].data = [data.plastic, data.medical, data.general];
+                    wasteChart.update();
+
+                    // Update Trend Chart
+                    const history = data.history || [];
+                    trendChart.data.labels = history.map(item => item.time);
+                    trendChart.data.datasets[0].data = history.map(item => item.plastic);
+                    trendChart.data.datasets[1].data = history.map(item => item.medical);
+                    trendChart.data.datasets[2].data = history.map(item => item.general);
+                    trendChart.update();
+
+                    // Status Indicator
+                    const statusDot = document.querySelector('.status-dot');
+                    const noSignal = document.getElementById('no-signal');
+
+                    if (data.esp32_status === "ONLINE") {
+                        statusDot.style.background = "#22c55e";
+                        statusDot.setAttribute('data-tooltip', 'ESP32 Online');
+                        noSignal.style.display = 'none';
+                    } else {
+                        statusDot.style.background = "#ef4444";
+                        statusDot.setAttribute('data-tooltip', 'ESP32 Offline');
+                        noSignal.style.display = 'flex';
+                    }
+                })
+                .catch(err => console.error(err));
+        }
+
+        // --- RESET LOGIC ---
+        document.getElementById('reset-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            if (confirm("Are you sure you want to reset all waste statistics? This cannot be undone.")) {
+                fetch('/reset', { method: 'POST' })
+                    .then(response => response.json())
+                    .then(res => {
+                        if (res.status === 'success') {
+                            updateDashboard();
+                            alert("Statistics have been reset.");
+                        }
+                    })
+                    .catch(err => console.error(err));
+            }
+        });
+
+        setInterval(updateDashboard, 2000);
+        updateDashboard();
+    </script>
+</body>
+
+</html>
